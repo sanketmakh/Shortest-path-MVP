@@ -20,9 +20,8 @@ function initMap() {
   directionsRenderer = new google.maps.DirectionsRenderer({
     suppressMarkers: true, // Hide default markers
     polylineOptions: {
-     
-      strokeColor: "#9B4444", 
-      strokeWeight: 4, 
+      strokeColor: "#9B4444",
+      strokeWeight: 4,
     },
   });
   directionsRenderer.setMap(map);
@@ -70,11 +69,11 @@ function addMarker() {
   const li = document.createElement("li");
   li.innerHTML =
     location +
-    `<button onclick='markVisited(${locationInput.value})'>Done</button>`;
+    "&nbsp" +
+    `<button style="height:20px; margin: 3px; color:blue;text-align:center;" onclick='markVisited(${locationInput.value})'>Done</button>`;
   li.id = location;
   ol.append(li);
 
-  
   if (!location) {
     alert("Please enter a valid location.");
     return;
@@ -98,15 +97,12 @@ function addMarker() {
 
       locationInput.value = ""; // Clear the input field
 
-     
       map.setCenter(marker.getPosition());
     } else {
       alert("Error: Could not find the location.");
     }
   });
 }
-
-
 
 function calculateShortestPath() {
   if (renderLocations.length < 2) {
