@@ -12,7 +12,7 @@ Video Link 2(better UI):https://drive.google.com/file/d/1qVCwK9WegOduiBc8P-tG_xi
 INSTRUCTIONS : 
 
 Note:
-Run Index.html file using live server(it automatically drives to the default local ip pls change it to -->http://127.0.0.1:5500)(port 5500 can vary according to your configs pls refer code for more detail(index.js and script.js).
+Run Index.html file using live server(it automatically drives to the default local ip pls change it to -->http://127.0.0.1:5500)(pls refer code for more detail(index.js and script.js).
 Run index.js file like normal nodejs server...
 The deployment link given was an intial version which doesnt include backend(doesnt store state) but the current version has been updated with backend and database ,but the working is same as in shown in video link above...
 
