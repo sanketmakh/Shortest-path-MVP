@@ -2,8 +2,58 @@ let map;
 let markers = {};
 let locations = [];
 let renderLocations = [];
-let directionsService;
 let directionsRenderer;
+
+function handleEmailLogic() {
+  if (localStorage.getItem("email") == null) {
+    let modal = document.getElementById("myModal");
+    modal.style.display = "block";
+  } else {
+    fetch(
+      `http://localhost:3000/locations?email=${localStorage.getItem("email")}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((res) => {
+        const ol = document.getElementById("ordered-list");
+        for (let i = 0; i < res["locations"].length; i++) {
+          let loc = res["locations"][i].location;
+          let lat = res["locations"][i].lat;
+          let lng = res["locations"][i].lng;
+          const marker = new google.maps.Marker({
+            position: { lat, lng },
+            map,
+            title: loc,
+          });
+          locations.push(loc);
+          markers[loc] = marker;
+          renderLocations.push(marker);
+          map.setCenter(marker.getPosition());
+          const li = document.createElement("li");
+          li.innerHTML =
+            loc +
+            "&nbsp" +
+            `<button style="height:20px; margin: 3px; color:blue;text-align:center;" onclick='markVisited(${loc})'>Done</button>`;
+          li.id = loc;
+          ol.append(li);
+        }
+      });
+  }
+}
+
+function handleSubmit() {
+  const email = document.getElementById("emailInput").value;
+  if (email) {
+    localStorage.setItem("email", email);
+    let modal = document.getElementById("myModal");
+    modal.style.display = "none";
+  }
+}
 
 function initMap() {
   const directionsPanel = document.getElementById("directionsPanel");
@@ -28,7 +78,20 @@ function initMap() {
 }
 
 function markVisited(location) {
+  console.log("--->", location);
   location = location.id;
+
+  fetch("http://localhost:3000/deleteLocation", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      email: localStorage.getItem("email"),
+      location: location,
+    }),
+  });
   let marker = markers[location];
   // let icon = new google.maps.Icon({ url: "./tick.png" });
   marker.setIcon({
@@ -79,13 +142,20 @@ function addMarker() {
     return;
   }
 
-  // Using geocoding or autocomplete to translate the location into coordinates
-  geocoder = new google.maps.Geocoder();
-  geocoder.geocode({ address: location }, (results, status) => {
-    if (status === google.maps.GeocoderStatus.OK) {
-      const lat = results[0].geometry.location.lat();
-      const lng = results[0].geometry.location.lng();
-
+  fetch("http://localhost:3000/addLocation", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      email: localStorage.getItem("email"),
+      location: location,
+    }),
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      const { lat, lng } = res;
       const marker = new google.maps.Marker({
         position: { lat, lng },
         map,
@@ -93,15 +163,12 @@ function addMarker() {
       });
       markers[location] = marker;
       renderLocations.push(marker);
-      // markers.push(marker); // Add marker to the markers array
+    //   markers.push(marker); // Add marker to the markers array
 
       locationInput.value = ""; // Clear the input field
 
       map.setCenter(marker.getPosition());
-    } else {
-      alert("Error: Could not find the location.");
-    }
-  });
+    });
 }
 
 function calculateShortestPath() {
@@ -140,3 +207,5 @@ function calculateShortestPath() {
     }
   });
 }
+
+window.onload = handleEmailLogic;
