@@ -1,0 +1,43 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google Maps with Dynamic Markers</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <script
+      async
+      defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9ON7DrRY6URgu6X2IndbWQqm6fQfPZqs&callback=initMap"
+    ></script>
+  </head>
+  <body>
+    <div id="myModal" class="modal">
+    
+      <!-- Modal content -->
+      <div class="modal-content">
+        <p>Please enter your email:</p>
+        <input type="email" id="emailInput">
+        <button id="submitEmail" onclick="handleSubmit()">Submit</button>
+      </div>
+    
+    </div>
+
+    <div id="map"></div>
+    <div class="body1">
+      <input type="text" id="locationInput" placeholder="Enter location" />
+      &nbsp; &nbsp;
+      <button id="b1" onclick="addMarker()">Add Marker</button> &nbsp; &nbsp;
+
+      <button id="b1" onclick="calculateShortestPath()">
+        Find Shortest Path
+      </button>
+      <div id="directionsPanel"></div>
+    </div>
+  </body>
+</html>
+
+
